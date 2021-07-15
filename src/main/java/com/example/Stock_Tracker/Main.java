@@ -13,10 +13,10 @@ public class Main {
     public static void main( String[] args ) throws Exception
     {
         // Host url
-        String host = "https://apidojo-yahoo-finance-v1.p.rapidapi.com/market/v2/get-quotes?region=US&symbols=AMD%2CIBM%2CAAPL";
+        String host = "https://apidojo-yahoo-finance-v1.p.rapidapi.com/market/v2/get-quotes?region=US&symbols=AMD%2C";
         String charset = "UTF-8";
         // Headers for a request
-        String x_rapidapi_host = "apidojo-yahoo-finance-v1.p.rapidapi.com/market/v2/get-quotes?region=US&symbols=AMD%2CIBM%2CAAPL";
+        String x_rapidapi_host = "apidojo-yahoo-finance-v1.p.rapidapi.com/market/v2/get-quotes?region=US&symbols=AMD%2C";
         String x_rapidapi_key = "fbc0efed9emshf31f9309e9aef73p1aa77ejsn2c24b61978cd";//Type here your key
         // Params
         String q = "AMD";
@@ -33,8 +33,8 @@ public class Main {
                 .asJson();
 
         JSONObject testObject = new JSONObject(response);
-        System.out.println(testObject);
-        Object Value = testObject.getJSONObject("body").getJSONObject("object").getJSONObject("quoteResponse").getJSONArray("result").getJSONObject(1).getInt("twoHundredDayAverageChange");
+        //System.out.println(testObject);
+        Object Value = testObject.getJSONObject("body").getJSONObject("object").getJSONObject("quoteResponse").getJSONArray("result").getJSONObject(0).getInt("regularMarketPreviousClose");
         System.out.println(Value);
 
 
