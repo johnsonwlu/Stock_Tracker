@@ -6,6 +6,7 @@ import com.mashape.unirest.http.Unirest;
 import org.json.JSONObject;
 
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.Scanner;
 import java.net.URLEncoder;
 import java.util.Scanner;
@@ -19,8 +20,9 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 public class API_Connect {
+    public Integer overallCost = 0;
+    //public ArrayList<Stock> stocks = new ArrayList();
     public Integer api(String qInput) throws Exception {
-//        Integer overallCost = 0;
 //        while(true) {
 //            System.out.println("What would you like to do? ");
 //            System.out.println("1. add stocks");

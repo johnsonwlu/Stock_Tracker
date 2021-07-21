@@ -1,17 +1,19 @@
 package gui;
 
+import com.example.Stock_Tracker.Stock;
 import delegates.main_Delegate;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import com.example.Stock_Tracker.API_Connect;
 
 public class main_GUI extends JFrame implements ActionListener {
 
+    public ArrayList<Stock> stocks = new ArrayList<>();
     private main_Delegate delegate;
 
     public main_GUI() {
@@ -19,16 +21,22 @@ public class main_GUI extends JFrame implements ActionListener {
     }
 
     private JButton enter_button;
-    private JTextField enter_textfield;
+    public JTextField enter_textfield;
+    public JSpinner size_textfield;
     private JButton exit;
     private JTextArea printLines;
+    private JButton print;
+    API_Connect ac = new API_Connect();
+    public Integer overallCost = 0;
 
     public void showFrame(main_Delegate delegate) {
 
         this.delegate = delegate;
 
         enter_button = new JButton("Enter");
+        print = new JButton("Print");
         enter_textfield = new JTextField(10);
+        size_textfield = new JSpinner();
         printLines = new JTextArea();
         exit = new JButton("Exit");
 //        try {
@@ -45,10 +53,14 @@ public class main_GUI extends JFrame implements ActionListener {
         contentPane.setLayout(gb);
         contentPane.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
         contentPane.add(enter_textfield);
+        contentPane.add(size_textfield);
         contentPane.add(enter_button);
+        contentPane.add(print);
         contentPane.add(exit);
         contentPane.add(printLines);
+        contentPane.setPreferredSize(new Dimension(700,200));
         enter_button.addActionListener(this);
+        print.addActionListener(this);
         exit.addActionListener(this);
 
         this.pack();
@@ -64,22 +76,46 @@ public class main_GUI extends JFrame implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         try {
-            handleMaple(e);
+            handleAdd(e);
+            handlePrint(e);
         } catch (Exception exception) {
             exception.printStackTrace();
         }
         handleExit(e);
     }
 
-    public void handleMaple(ActionEvent e) throws Exception {
+    public void handleAdd(ActionEvent e) throws Exception {
         if (e.getActionCommand().equals("Enter")) {
-            API_Connect ac = new API_Connect();
-            Integer resultOne = ac.api(enter_textfield.getText());
+            String name = enter_textfield.getText();
+            Integer resultOne = ac.api(name);
+            Integer resultTwo = (Integer) size_textfield.getValue();
+
+            overallCost += resultOne * resultTwo;
+            boolean x = false;
+            for (int i = 0; i<stocks.size()-1; i++) {
+                if (stocks.get(i).getStockName().equals(name)) {
+                    stocks.set(i, new Stock(name, stocks.get(i).getCount() + resultTwo));
+                    x = true;
+                }
+            }
+            if (!x) {
+                Stock newStock = new Stock(name, resultTwo);
+                stocks.add(newStock);
+            }
             printLines.setText("  Stock Price: " + String.valueOf(resultOne));
+            printLines.setText(" Total portfolio " + overallCost);
+
 
         }
     }
+    public void handlePrint(ActionEvent e) {
+        if (e.getActionCommand().equals("Print")) {
+            for (Stock stock: stocks) {
+                System.out.println("you have " + stock.getCount() + " shares of " + stock.getStockName());
+            }
 
+        }
+    }
     public void handleExit(ActionEvent e) {
         if (e.getActionCommand().equals("Exit")) {
             System.exit(0);
