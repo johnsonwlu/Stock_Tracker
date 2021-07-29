@@ -41,6 +41,7 @@ public class main_GUI extends JFrame implements ActionListener {
         size_textfield = new JSpinner();
         printLines = new JTextArea();
         mainList = new JList<>( stockList );
+
         exit = new JButton("Exit");
 
 //        try {
@@ -62,7 +63,6 @@ public class main_GUI extends JFrame implements ActionListener {
         contentPane.add(print);
         contentPane.add(exit);
         contentPane.add(printLines);
-        contentPane.add(mainList);
         contentPane.setPreferredSize(new Dimension(700,200));
         enter_button.addActionListener(this);
         print.addActionListener(this);
@@ -72,6 +72,7 @@ public class main_GUI extends JFrame implements ActionListener {
         mainList.setVisibleRowCount(-1);
         JScrollPane listScroller = new JScrollPane(mainList);
         listScroller.setPreferredSize(new Dimension(250,80));
+        contentPane.add(listScroller);
         this.pack();
 
         Dimension d = this.getToolkit().getScreenSize();
@@ -105,13 +106,14 @@ public class main_GUI extends JFrame implements ActionListener {
                 System.out.println(stocks.get(i).getStockName().equals(name));
                 if (stocks.get(i).getStockName().equals(name)) {
                     stocks.set(i, new Stock(name, stocks.get(i).getCount() + resultTwo));
+                    stockList.setElementAt(stocks.get(i).getStockName() + " " + stocks.get(i).getCount(), i);
                     x = true;
                 }
             }
             if (x == false) {
                 Stock newStock = new Stock(name, resultTwo);
                 stocks.add(newStock);
-                stockList.addElement(newStock.getStockName());
+                stockList.addElement(newStock.getStockName() + " " + newStock.getCount());
             }
             printLines.setText("  Stock Price: " + String.valueOf(resultOne));
             printLines.setText(" Total portfolio " + overallCost);
