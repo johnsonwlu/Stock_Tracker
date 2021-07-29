@@ -26,6 +26,8 @@ public class main_GUI extends JFrame implements ActionListener {
     private JButton exit;
     private JTextArea printLines;
     private JButton print;
+    DefaultListModel<String> stockList = new DefaultListModel<>();
+    private JList<String> mainList;
     API_Connect ac = new API_Connect();
     public Integer overallCost = 0;
 
@@ -38,7 +40,9 @@ public class main_GUI extends JFrame implements ActionListener {
         enter_textfield = new JTextField(10);
         size_textfield = new JSpinner();
         printLines = new JTextArea();
+        mainList = new JList<>( stockList );
         exit = new JButton("Exit");
+
 //        try {
 //            Image img = ImageIO.read(getClass().getResource("/exit.png"));
 //            exit.setIcon(new ImageIcon(img));
@@ -58,11 +62,16 @@ public class main_GUI extends JFrame implements ActionListener {
         contentPane.add(print);
         contentPane.add(exit);
         contentPane.add(printLines);
+        contentPane.add(mainList);
         contentPane.setPreferredSize(new Dimension(700,200));
         enter_button.addActionListener(this);
         print.addActionListener(this);
         exit.addActionListener(this);
-
+        mainList.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
+        mainList.setLayoutOrientation(JList.HORIZONTAL_WRAP);
+        mainList.setVisibleRowCount(-1);
+        JScrollPane listScroller = new JScrollPane(mainList);
+        listScroller.setPreferredSize(new Dimension(250,80));
         this.pack();
 
         Dimension d = this.getToolkit().getScreenSize();
@@ -92,15 +101,17 @@ public class main_GUI extends JFrame implements ActionListener {
 
             overallCost += resultOne * resultTwo;
             boolean x = false;
-            for (int i = 0; i<stocks.size()-1; i++) {
+            for (int i = 0; i<stocks.size(); i++) {
+                System.out.println(stocks.get(i).getStockName().equals(name));
                 if (stocks.get(i).getStockName().equals(name)) {
                     stocks.set(i, new Stock(name, stocks.get(i).getCount() + resultTwo));
                     x = true;
                 }
             }
-            if (!x) {
+            if (x == false) {
                 Stock newStock = new Stock(name, resultTwo);
                 stocks.add(newStock);
+                stockList.addElement(newStock.getStockName());
             }
             printLines.setText("  Stock Price: " + String.valueOf(resultOne));
             printLines.setText(" Total portfolio " + overallCost);
